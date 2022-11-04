@@ -38,7 +38,7 @@ app.get("/", async (req, res) => {
   });
   const value = await client.get("test");
   console.log(value);
-  res.status(200).json({ value: 500 });
+  res.status(200).json(await client.hGetAll('funds'));
 });
 
 app.get("/people", async (req, res) => {
