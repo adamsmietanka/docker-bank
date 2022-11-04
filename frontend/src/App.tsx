@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 import axios from "axios";
 import Input from "./components/atoms/Input";
+import InputTransfer from "./components/atoms/InputTransfer";
 
 function App() {
   const [people, setPeople] = useState([]);
@@ -24,6 +25,16 @@ function App() {
 
   const topUp = async (person: string, amount: number) => {
     let response = await axios.post("http://0.0.0.0:8000/topup/", {person, amount});
+    setData(() => response.data);
+  };
+
+  const withdraw = async (person: string, amount: number) => {
+    let response = await axios.post("http://0.0.0.0:8000/withdraw/", {person, amount});
+    setData(() => response.data);
+  };
+
+  const transfer = async (from: string, to: string, amount: number) => {
+    let response = await axios.post("http://0.0.0.0:8000/transfer/", {from, to, amount});
     setData(() => response.data);
   };
 
@@ -85,9 +96,9 @@ function App() {
                   <td>{person}</td>
                   <td>{data[person]}</td>
                   <td>
-                    {/* {person !== user && (
-                      <Input label="Transfer" callback={() => {}} />
-                    )} */}
+                    {person !== user && (
+                      <InputTransfer label="Transfer" from={user} to={person} callback={transfer} />
+                    )}
                   </td>
                 </tr>
               ))}
@@ -97,7 +108,7 @@ function App() {
         <div className="text-xl font-bold">Your actions</div>
         <div className="form-control space-y-4">
           <Input label="Top up" user={user} callback={topUp} />
-          <Input label="Withdraw"  user={user} max={parseInt(data[user])} callback={() => {}} />
+          <Input label="Withdraw"  user={user} max={parseInt(data[user]) || 1000} callback={withdraw} />
           <button className="btn" onClick={() => resetData()}>Reset Funds</button>
         </div>
       </div>
