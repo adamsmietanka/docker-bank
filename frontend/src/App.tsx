@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import logo from "./logo.svg";
 import "./App.css";
 import axios from "axios";
+import Input from "./components/atoms/Input";
 
 function App() {
   const [people, setPeople] = useState([]);
   const [user, setUser] = useState("");
-  const [data, setData] = useState({});
+  const [data, setData] = useState<Record<string, string>>({});
 
   const fetchData = async () => {
     let response = await axios.get("http://0.0.0.0:8000");
@@ -19,6 +19,11 @@ function App() {
   };
   const resetData = async () => {
     let response = await axios.post("http://0.0.0.0:8000/reset/");
+    setData(() => response.data);
+  };
+
+  const topUp = async (person: string, amount: number) => {
+    let response = await axios.post("http://0.0.0.0:8000/topup/", {person, amount});
     setData(() => response.data);
   };
 
@@ -80,23 +85,20 @@ function App() {
                   <td>{person}</td>
                   <td>{data[person]}</td>
                   <td>
-                    {person !== user && (
-                      <div className="form-control">
-                        <div className="input-group">
-                          <input
-                            type="text"
-                            placeholder="Enter amount"
-                            className="input input-bordered"
-                          />
-                          <button className="btn">Transfer</button>
-                        </div>
-                      </div>
-                    )}
+                    {/* {person !== user && (
+                      <Input label="Transfer" callback={() => {}} />
+                    )} */}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+        </div>
+        <div className="text-xl font-bold">Your actions</div>
+        <div className="form-control space-y-4">
+          <Input label="Top up" user={user} callback={topUp} />
+          <Input label="Withdraw"  user={user} max={parseInt(data[user])} callback={() => {}} />
+          <button className="btn" onClick={() => resetData()}>Reset Funds</button>
         </div>
       </div>
     </div>

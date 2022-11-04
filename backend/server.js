@@ -38,20 +38,34 @@ app.get("/", async (req, res) => {
   });
   const value = await client.get("test");
   console.log(value);
-  res.status(200).json(await client.hGetAll('funds'));
+  res.status(200).json(await client.hGetAll("funds"));
 });
 
 app.get("/people", async (req, res) => {
   res.status(200).json(Object.keys(funds));
 });
 
-app.post('/reset/', async (req, res) => {
-    await client.hSet('funds', [...Object.entries(funds).flat()], function(err, reply) {
-        console.log(reply); // OK
-      });
-    const value = await client.hGetAll('funds');
-    console.log(value)
-    res.status(200).json(value);
+app.post("/reset/", async (req, res) => {
+  await client.hSet(
+    "funds",
+    [...Object.entries(funds).flat()],
+    function (err, reply) {
+      console.log(reply); // OK
+    }
+  );
+  const value = await client.hGetAll("funds");
+  console.log(value);
+  res.status(200).json(value);
+});
+
+app.post("/topup/", async (req, res) => {
+  const { person, amount } = req.body;
+  await client.hIncrBy("funds", person, amount, function (err, reply) {
+    console.log(reply); // OK
+  });
+  const value = await client.hGetAll("funds");
+  console.log(value);
+  res.status(200).json(value);
 });
 
 app.listen(config.port, config.host);
