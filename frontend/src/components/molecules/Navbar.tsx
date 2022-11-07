@@ -5,6 +5,7 @@ const Navbar = () => {
     const people = useBankStore((state) => state.people)
     const user = useBankStore((state) => state.user)
     const setUser = useBankStore((state) => state.setUser)
+    
   return (
     <div className="navbar bg-base-200">
       <div className="flex-1">

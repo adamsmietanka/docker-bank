@@ -1,5 +1,3 @@
-import axios from "axios";
-import React from "react";
 import { useBankStore } from "../../utils/useBank";
 import InputTransfer from "../atoms/InputTransfer";
 
@@ -8,12 +6,7 @@ const Table = () => {
     const people = useBankStore((state) => state.people)
     const user = useBankStore((state) => state.user)
     const data = useBankStore((state) => state.data)
-    const setData = useBankStore((state) => state.setData)
-
-    const transfer = async (from: string, to: string, amount: number) => {
-      let response = await axios.post("http://0.0.0.0:8000/transfer/", {from, to, amount});
-      setData(response.data);
-    };
+    const transfer = useBankStore((state) => state.transfer)
   return (
     <>
       <div className="text-xl font-bold">Funds</div>
@@ -37,7 +30,6 @@ const Table = () => {
                   {person !== user && (
                     <InputTransfer
                       label="Transfer"
-                      from={user}
                       to={person}
                       callback={transfer}
                     />

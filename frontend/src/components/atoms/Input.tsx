@@ -3,11 +3,10 @@ import React, { useState } from "react";
 interface Props {
   label: string;
   max?: number;
-  user: string;
-  callback: (person: string, amount: number) => void;
+  callback: (amount: number) => void;
 }
 
-const Input = ({ label, max, user, callback }: Props) => {
+const Input = ({ label, max, callback }: Props) => {
   const [value, setValue] = useState(0);
   return (
     <div className="input-group">
@@ -20,7 +19,7 @@ const Input = ({ label, max, user, callback }: Props) => {
         max={max}
         min={0}
       />
-      <button className="btn" onClick={() => callback(user, value)}>
+      <button className="btn" onClick={() => callback(value)}>
         {label}
       </button>
     </div>

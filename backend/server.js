@@ -59,8 +59,8 @@ app.post("/reset/", async (req, res) => {
 });
 
 app.post("/topup/", async (req, res) => {
-  const { person, amount } = req.body;
-  await client.hIncrBy("funds", person, amount, function (err, reply) {
+  const { user, amount } = req.body;
+  await client.hIncrBy("funds", user, amount, function (err, reply) {
     console.log(reply);
   });
   const value = await client.hGetAll("funds");
@@ -68,8 +68,8 @@ app.post("/topup/", async (req, res) => {
 });
 
 app.post("/withdraw/", async (req, res) => {
-  const { person, amount } = req.body;
-  await client.hIncrBy("funds", person, -amount, function (err, reply) {
+  const { user, amount } = req.body;
+  await client.hIncrBy("funds", user, -amount, function (err, reply) {
     console.log(reply);
   });
   const value = await client.hGetAll("funds");
